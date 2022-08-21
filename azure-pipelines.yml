@@ -17,28 +17,28 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2 #construye el proyecto
   displayName: 'Build the project - $(buildConfiguration)'
   inputs:
     command: 'build'
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@2 #empaqueta el proyecto con una version 1.0.0
   displayName: 'Pack the project - $(buildConfiguration)'
   inputs:
     command: 'pack'
     projects: '**/*.csproj'
     arguments: '--no-build --configuration $(buildConfiguration)'
-    versioningScheme: byPrereleaseNumber
+    versioningScheme: byPrereleaseNumber #agrega un sufijo de relanzamiento unico 
     majorVersion: '1'
-    minorVersion: '0'
+    minorVersion: '1'
     patchVersion: '0'
  
-- task: NuGetCommand@2
+- task: NuGetCommand@2 #envia el paquete al artifact que cree 
   displayName: 'Publish NuGet package'
   inputs:
     command: push
-    feedPublish: '$(System.TeamProject)/Tailspin.SpaceGame.Web.Models'
+    feedPublish: '$(System.TeamProject)/Tailspin.SpaceGame.Web.Models' #nombre del feed donde tiene que publicarlo 
     allowPackageConflicts: true
   condition: succeeded()
